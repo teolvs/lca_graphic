@@ -13,7 +13,7 @@ The notebook offer several simple methods to display three dashboards :
 Data used come from the open [US EEIO table](https://github.com/USEPA/USEEIO), and [available here (115MB download)](https://files.brightway.dev/visualization_example_data.zip). 
 Note: any brightway2 LCA database may be used and would work.
 
-The code to create the example data is given in the notebook ``visualization_contest.ipynb``
+The code to create the example data and how use the main methods is given in the notebook ``visualization_contest.ipynb``. To see the dashboards, the code should be executed on an Jupyter Notebook, since it does not appear on Github.
 
 ## Contribution
 
