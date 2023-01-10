@@ -3,7 +3,8 @@
 ## Description
 This tool is designed to provide several easy-to-understand graphics for everyday LCA practionners to quickly analyze their LCA results in Brightway. 
 
-The notebook offer several simple methods to display three dashboards :
+The [utils.py](https://github.com/teolvs/lca_graphic/blob/main/utils.py) file gives useful tool for quickly LCA computations and analyse of the contributions.
+The [dashboards.py](https://github.com/teolvs/lca_graphic/blob/main/dashboards.py) provides the methods to gather all the results into three dashboards :
 1. to compare LCA results in different impact categories on the one hand,
 2. to analyze the contributions of each activity in different impact categories on the other hand
 3. to plot the variations of the contribution of the top processes (for the reference method) for each impact category.
