@@ -7,7 +7,7 @@ The [utils.py](https://github.com/teolvs/lca_graphic/blob/main/utils.py) file gi
 The [dashboards.py](https://github.com/teolvs/lca_graphic/blob/main/dashboards.py) provides the methods to gather all the results into three dashboards :
 1. to compare LCA results in different impact categories on the one hand,
 2. to analyze the contributions of each activity in different impact categories on the other hand
-3. to plot the variations of the contribution of the top processes (for the reference method) for each impact category.
+3. to plot the variations of the contribution of the top processes (for the reference method) for each impact category to identify the impact transfers.
 
 
 ## Installation
