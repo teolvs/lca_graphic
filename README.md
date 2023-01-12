@@ -20,5 +20,5 @@ The code to create the example data and how use the main methods is given in the
 
 
 ## License
-BSD 2-Clause "Simplified" License
+BSD 2-Clause "Simplified" License <br>
 https://github.com/teolvs/lca_graphic/blob/main/LICENSE.md

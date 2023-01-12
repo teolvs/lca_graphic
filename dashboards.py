@@ -17,8 +17,57 @@ import bw2analyzer as ba
 import seaborn as sns
 import textwrap
 
+from utils import *
 
-def compare(fu, methods, act_transfert, reference_category =('Impact Potential', 'GCC'), sharex=True, cols=1, func_unit="kg"):
+#define standard color palette:
+colors = ["#F08C2E", "#7f6000", "#72AF42", "#A32683"]
+
+#create longer color list for complex figures
+color_div_YlBr=sns.color_palette('YlOrBr',6)
+color_seq_green=sns.color_palette('Greens',6)
+color_seq_RdPu=sns.color_palette('RdPu',6)
+color_seq_org=sns.color_palette('Oranges',5)
+
+colors.extend(colors)
+
+
+#the 2 following methods come from the library lca_algebraic from stats.py : 
+# https://github.com/oie-mines-paristech/lca_algebraic/blob/master/lca_algebraic/stats.py
+def _display_tabs(titlesAndContentF):
+    """Generate tabs"""
+    tabs = []
+    titles = []
+    for title, content_f in titlesAndContentF:
+        titles.append(title)
+
+        tab = widgets.Output()
+        with tab:
+            content_f()
+        tabs.append(tab)
+
+    res = widgets.Tab(children=tabs)
+    for i, title in enumerate(titles):
+        res.set_title(i, title)
+    display(res)
+    
+def displayWithExportButton(df):
+    '''Display dataframe with option to export'''
+
+    button = widgets.Button(description="Export data")
+    button.style.button_color = "lightgray"
+    def click(e) :
+        df.to_csv("out.csv")
+        button.description = "exported as 'out.csv'"
+    dfout = widgets.Output()
+    with dfout :
+        display(df)
+
+    button.on_click(click)
+
+    display(widgets.VBox([button, dfout]))
+
+
+def compare(fu, methods, reference_category =('Impact Potential', 'GCC'), sharex=True, cols=1, func_unit="kg"):
     '''
     Compare several activities for several impact categories
     ----------
@@ -34,7 +83,6 @@ def compare(fu, methods, act_transfert, reference_category =('Impact Potential',
     act=list(fu.keys())
     df=lca_comparison(fu, methods, method_ref=reference_category)
     act_ref=act_topscore(fu)
-    df_norm=df.T.apply(lambda x: x/x.max(), axis=1) #to normalize the results for each impact category
     
     def table():
         displayWithExportButton(df)
@@ -158,83 +206,10 @@ def compare(fu, methods, act_transfert, reference_category =('Impact Potential',
             plt.show(fig)
             
             displayWithExportButton(df)
-
-    def heatmap():
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            fig, axes = plt.subplots(figsize=(20,10))
-            sns.set_style("white")
-            sns.heatmap(df_norm,annot = True, cbar = True, ax=axes, cmap='YlOrBr', alpha=0.8, linewidth=0.5, xticklabels=True)
-            axes.set_yticklabels([m[0] for m in methods], rotation=0, fontsize=20)
-            axes.set_xticks(range(len(df_norm.columns)), ['\n'.join(textwrap.wrap(label, 30)) for label in df_norm.columns],rotation=0,fontsize=20,ha="left")
-            fig.suptitle("Comparison of different LCA", fontsize=30, fontweight='bold',x=0.44, y=1.02) #centered title in bold
-            axes.set_title("for 1 " + func_unit,fontsize=17, ha='center',y=1.1, color='gray')
-            plt.show()
-            displayWithExportButton(df_norm)
-
-            
-    def transfer_impact():
-        if act_transfert==act_ref:
-            display("To plot the impact transfer diagram, the considered activity must be different from the top activity")
-        else :
-            df_transfer=df_norm[act_transfert['name'] ]*100-df_norm[act_ref['name']]*100 #%
-            df_transfer=df_transfer.sort_values()
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                sns.set_style("white")
-                fig, axes = plt.subplots(figsize=(20,10))
-                plt.bar(range(len(df_transfer)),df_transfer,alpha=0.8, color=colors)
-                plt.xticks(range(len(df_transfer)),[m[0] + ' ' + m[1] for m in methods], fontsize=20)
-                
-                #To remove the frame but keep a horizontal line on 0
-                axes.spines['top'].set_visible(False)
-                axes.spines['right'].set_visible(False)
-                axes.spines['bottom'].set_visible(False)
-                axes.spines['left'].set_visible(False)
-                axes.axhline(y=0, color='gray', linewidth=1)
-
-                #add each score of components
-                for bar in axes.patches:
-                    if bar.get_height()>=0:
-                        y_offset=-3
-                        axes.set_ylabel('Impact Transfer', fontsize=20)
-                        fig.suptitle('Impact transfer of {} \n compared to {}'.format(act_transfert['name'],act_ref['name']),
-                                     fontsize=30, fontweight='bold', ha='center')
-                    else :
-                        y_offset=1
-                        axes.set_ylabel('Impact Reduction', fontsize=20)
-                        fig.suptitle('Impact Reduction of {} \n compared to {}'.format(act_transfert['name'],act_ref['name']),
-                                     fontsize=30, fontweight='bold', ha='center')
-
-                    # the color is white if the bar is dark and vice versa 
-                    r, g, b, _ = bar.get_facecolor()
-                    if r + g + b > 1.8:
-                        c = 'black'
-                    else:
-                        c = 'white'
-                    axes.text(
-                          # Put the text in the middle of each bar. get_x returns the start
-                          # so we add half the width to get to the middle.
-                          bar.get_x() + bar.get_width() / 2,
-                          # Vertically, add the height of the bar to the start of the bar,
-                          # along with the offset.
-                          bar.get_height() + bar.get_y() + y_offset,
-                          # This is actual value we'll show.
-                          str(round(bar.get_height())) + ' %',
-                          # Center the labels and style them a bit.
-                          ha='center',
-                          color=c,
-                          alpha=0.9,
-                          size=20,
-                      )
-                axes.set_yticks([0]) #to remove all the graduations and keep only the zero
-                plt.show()
         
     _display_tabs([
         ("Reference indicator", graph_method_ref),
-        ("All indicators",graph_multi),
-        ("Heatmap",heatmap),
-        ("Impact transfer",transfer_impact)        
+        ("All indicators",graph_multi),       
     ])
 
 def hotspots(fu, methods, reference_category=('Impact Potential', 'GCC'),limit=0.05, func_unit="kg"):
@@ -250,7 +225,7 @@ def hotspots(fu, methods, reference_category=('Impact Potential', 'GCC'),limit=0
     df=lca_comparison(fu, methods, method_ref=reference_category)
     
     #to have one color by method, we define a dataframe:
-    df_color=pd.DataFrame(index=list_methods,data=[colors[c] for c in range(len(list_methods))]).T
+    df_color=pd.DataFrame(index=methods,data=[colors[c] for c in range(len(methods))]).T
     
     def contributions(act, method):
         with warnings.catch_warnings():
@@ -306,17 +281,92 @@ def hotspots(fu, methods, reference_category=('Impact Potential', 'GCC'),limit=0
             _display_tabs([("on " + str(i[0]+' ['+i[1]+']'), lambda i=i: contributions(act,i)) for i in methods])
 
 
-def balance(fu, methods, reference_category=('Impact Potential', 'GCC'),limit=5, cols=3):
+def impact_transfer(fu, methods, reference_category=('Impact Potential', 'GCC'),limit=5, cols=3, func_unit="kg"):
     '''
     Plot the variations of the contribution of the top processes (for the reference method) for each impact category 
 
     ----------
-    fu : dicitonnary of the single activity with its associated amount
+    fu : dicitonnary of activities with the associated amount
     methods : set of impact category methods
     method_ref : method used for normalization ('Impact Potential', 'GCC') by default
     limit: relative threshold of the total lca score from which contributors are displayed : (0.05 by default)
     '''
+    
+    act=list(fu.keys())
+    df=lca_comparison(fu, methods, method_ref=reference_category)
+    act_ref=act_topscore(fu)
+    df_norm=df.T.apply(lambda x: x/x.max(), axis=1) #to normalize the results for each impact category
+    
+    def heatmap():
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            fig, axes = plt.subplots(figsize=(20,10))
+            sns.set_style("white")
+            sns.heatmap(df_norm,annot = True, cbar = True, ax=axes, cmap='YlOrBr', alpha=0.8, linewidth=0.5, xticklabels=True)
+            axes.set_yticklabels([m[0] for m in methods], rotation=0, fontsize=20)
+            axes.set_xticks(range(len(df_norm.columns)), ['\n'.join(textwrap.wrap(label, 30)) for label in df_norm.columns],rotation=0,fontsize=20,ha="left")
+            fig.suptitle("Comparison of different LCA", fontsize=30, fontweight='bold',x=0.44, y=1.02) #centered title in bold
+            axes.set_title("for 1 " + func_unit,fontsize=17, ha='center',y=1.1, color='gray')
+            plt.show()
+            displayWithExportButton(df_norm)
 
+            
+    def transfer_impact():            
+        
+        act_transfert=[act for act in fu.keys() if act!=act_ref][0]
+        df_transfer=df_norm[act_transfert['name'] ]*100-df_norm[act_ref['name']]*100 #%
+        df_transfer=df_transfer.sort_values()
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            sns.set_style("white")
+            fig, axes = plt.subplots(figsize=(20,10))
+            plt.bar(range(len(df_transfer)),df_transfer,alpha=0.8, color=colors)
+            plt.xticks(range(len(df_transfer)),[m[0] + ' ' + m[1] for m in methods], fontsize=20)
+
+            #To remove the frame but keep a horizontal line on 0
+            axes.spines['top'].set_visible(False)
+            axes.spines['right'].set_visible(False)
+            axes.spines['bottom'].set_visible(False)
+            axes.spines['left'].set_visible(False)
+            axes.axhline(y=0, color='gray', linewidth=1)
+
+            #add each score of components
+            for bar in axes.patches:
+                if bar.get_height()>=0:
+                    y_offset=-4
+                    axes.set_ylabel('Impact Transfer', fontsize=20)
+                    fig.suptitle('Impact transfer of {} \n compared to {}'.format(act_transfert['name'],act_ref['name']),
+                                 fontsize=30, fontweight='bold', ha='center')
+                else :
+                    y_offset=1
+                    axes.set_ylabel('Impact Reduction', fontsize=20)
+                    fig.suptitle('Impact Reduction of {} \n compared to {}'.format(act_transfert['name'],act_ref['name']),
+                                 fontsize=25, fontweight='bold', ha='center')
+
+                # the color is white if the bar is dark and vice versa 
+                r, g, b, _ = bar.get_facecolor()
+                if r + g + b > 1.8:
+                    c = 'black'
+                else:
+                    c = 'white'
+                axes.text(
+                      # Put the text in the middle of each bar. get_x returns the start
+                      # so we add half the width to get to the middle.
+                      bar.get_x() + bar.get_width() / 2,
+                      # Vertically, add the height of the bar to the start of the bar,
+                      # along with the offset.
+                      bar.get_height() + bar.get_y() + y_offset,
+                      # This is actual value we'll show.
+                      str(round(bar.get_height())) + ' %',
+                      # Center the labels and style them a bit.
+                      ha='center',
+                      color=c,
+                      alpha=0.9,
+                      size=20,
+                  )
+            axes.set_yticks([0]) #to remove all the graduations and keep only the zero
+            plt.show()
+    
     def reference_contributions(act):
         #Get the top contributors for the reference impact category
         df = contributions_df(act,reference_category,limit=limit,limit_type='number',group_by_other=False,norm=True)
@@ -386,11 +436,22 @@ def balance(fu, methods, reference_category=('Impact Potential', 'GCC'),limit=5,
             fig.suptitle("Contribution analysis of " + act['name'] +"\n", fontsize=30, fontweight='bold', ha='center', y=1.02) #centered title in bold
             plt.tight_layout()
             plt.show()
-            
-    _display_tabs([(j['name'], lambda k=j: reference_contributions(k)) for j in list(fu.keys())])
+
+    if len(fu)==2:
+        _display_tabs([
+            ("Impact transfer", transfer_impact),
+            ("Heatmap", heatmap)] +
+            [(j['name'], lambda k=j: reference_contributions(k)) for j in list(fu.keys())]
+        )    
+    else :
+        _display_tabs([
+        ("Heatmap", heatmap)] +
+        [(j['name'], lambda k=j: reference_contributions(k)) for j in list(fu.keys())]
+        )
 
 
-def lca_graphic(fu,methods,act_transfert, reference_category=('Impact Potential', 'GCC'), func_unit="kWh"):
+
+def lca_graphic(fu,methods, reference_category=('Impact Potential', 'GCC'), func_unit="kg"):
     '''
     Generic function that calls the other methods to plot :
         - one dashboard that compare the impacts of serveral activites in different impact categories
@@ -404,6 +465,6 @@ def lca_graphic(fu,methods,act_transfert, reference_category=('Impact Potential'
     func_unit : functionnal unit (kg by default)    
     '''
     
-    compare(fu, methods, act_transfert, cols=cols, func_unit=func_unit)
+    compare(fu, methods, func_unit=func_unit)
+    impact_transfer(fu, methods,reference_category=reference_category,limit=5,func_unit=func_unit,cols=2)
     hotspots(fu, methods, limit=0.02)
-    balance(fu, methods,reference_category=reference_category,limit=5)
