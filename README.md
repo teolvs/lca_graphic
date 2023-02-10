@@ -1,10 +1,8 @@
 # lca_graphic
 
-## Submitter
-lca_graphic results from the union of the dataviz experience of Florent Blondin, 10 years on triing to crack the LCA datavizualisation challenge and the coding skills of Téo Lavisse, young and brilliant lca researcher at University of Grenoble.
-
-## Description 
-lca_graphic offers efficient charts for the daily life of a LCA practitionners in a single Brightway function to get a first overview of your LCA results.
+## Description
+This tool is designed to provide several easy-to-understand graphics for everyday LCA practionners to quickly analyze their LCA results in Brightway. 
+Hello hello
 
 The [utils.py](https://github.com/teolvs/lca_graphic/blob/main/utils.py) file gives useful tool for quickly LCA computations and analyse of the contributions.
 The [dashboards.py](https://github.com/teolvs/lca_graphic/blob/main/dashboards.py) provides the methods to gather all the results into three dashboards :
@@ -24,21 +22,6 @@ The code to create the example data and how use the main methods is given in the
 ## Contribution
 Do not hesitate to contribute to the improvements of this project.
 A major improvement would be to adapt the functions to Ecoinvent. This would be easily done by updating the nomenclature of the activities and the methods
-
-## Database(s) used
-- [x] Used example data from the contest repository
-- [ ] Used another database 👉 [used database name](url to the database)
-
-## Links to the code and visualization
-
-### Code
-Please specify here the location of the code that produced the visualization submitted.
-
-### Visualizations
-Please specify here the location of the example visualizations produced with your code.
-
-### Presentation video
-Please put here the links to a video of maximum 4 minutes where you present your visualization.
 
 ## License
 BSD 2-Clause "Simplified" License <br>
