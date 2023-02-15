@@ -18,7 +18,7 @@ The tool offers simple methods to display three dashboards :
 
 ### Code
 
-An example of the practical use of our tools can be found in the following [notebook]. Unfortunately, dashboards do not appear in the Github but you can run the notebook separately:
+An example of the practical use of our tools can be found in the following [notebook]. Unfortunately, dashboards do not appear in the Github. Thus, the code should be executed on an Jupyter Notebook to see the dashboards for real.
 
 [notebook]: https://github.com/teolvs/lca_graphic/blob/main/visualization_contest.ipynb
 

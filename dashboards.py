@@ -68,7 +68,7 @@ def displayWithExportButton(df):
     display(widgets.VBox([button, dfout]))
 
 
-def compare(fu, methods, reference_category=None, sharex=True, cols=1, func_unit="kg"):
+def compare(fu, methods, reference_category=None, sharex=True, cols=2, func_unit="kg"):
     '''
     Compare several activities for several impact categories
     ----------
@@ -167,7 +167,7 @@ def compare(fu, methods, reference_category=None, sharex=True, cols=1, func_unit
             axes = axes.flatten()
             for ax, m in zip(axes, methods):
                 ax.set_yticklabels(["0"]) #to remove all the graduations and keep only the zero
-                ax.set_ylabel(bd.Method(m).name[1], fontsize=15)
+                ax.set_ylabel('\n'.join(textwrap.wrap(bd.Method(m).name[1], 20)), fontsize=15)
                 ax.set_xticks(range(len(df)), ['\n'.join(textwrap.wrap(label, 20)) for label in df.index])
                 ax.set_title('')
                 
@@ -273,7 +273,7 @@ def hotspots(fu, methods, reference_category=None,limit=0.05, func_unit="kg"):
                     axes.text(
                         bar.get_x() + y_offset,
                         bar.get_y() + bar.get_height()/2,
-                        str('{:.2e}'.format(bar.get_width())) + ' '+ bd.methods[reference_category]['unit'], 
+                        str('{:.2e}'.format(bar.get_width())) + ' '+ bd.methods[method]['unit'], 
                         ha='left',
                         color=c,
                         alpha=0.8,
@@ -506,5 +506,5 @@ def lca_graphic(fu, methods, reference_category=None, func_unit="kg"):
         reference_category=methods[0]
         
     compare(fu, methods, func_unit=func_unit)
-    impact_transfer(fu, methods,reference_category=reference_category,limit=5,func_unit=func_unit,cols=2)
+    impact_transfer(fu, methods,reference_category=reference_category, limit=5, func_unit=func_unit,cols=2)
     hotspots(fu, methods, limit=0.02)
