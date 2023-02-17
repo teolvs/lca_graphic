@@ -9,7 +9,7 @@ The tool offers simple methods to display three dashboards :
 2. to analyze the contributions of each activity in different impact categories on the other hand
 3. to plot the variations of the contribution of the top processes (for the reference method) for each impact category to assess an potential impact transfer
 
-The visualisations provided are direct or indirect outcomes from the scientific paper "Investigating Product Designer LCA Preferred Logics and Visualisations, Maud Rio, Florent Blondin, Peggy Zwolinski, Procedia CIRP, 2019, ISSN 2212-8271, https://doi.org/10.1016/j.procir.2019.04.293.
+The visualisations provided are direct or indirect outcomes from the scientific paper "Investigating Product Designer LCA Preferred Logics and Visualisations" Maud Rio, Florent Blondin, Peggy Zwolinski, Procedia CIRP, 2019, ISSN 2212-8271, https://doi.org/10.1016/j.procir.2019.04.293.
 (https://www.sciencedirect.com/science/article/pii/S2212827119309412)
 
 ## Database(s) used
