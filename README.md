@@ -11,6 +11,7 @@ The [dashboards.py](https://github.com/teolvs/lca_graphic/blob/main/dashboards.p
 
 All these methods are generated all at once in the method ```lca_graphic```
 
+The visualisations provided are direct or indirect outcomes from the scientific paper "Investigating Product Designer LCA Preferred Logics and Visualisations" Maud Rio, Florent Blondin, Peggy Zwolinski, Procedia CIRP, 2019, ISSN 2212-8271, https://doi.org/10.1016/j.procir.2019.04.293. (https://www.sciencedirect.com/science/article/pii/S2212827119309412)
 
 ## Installation
 The library works with the open-source US EEIO database [US EEIO table](https://github.com/USEPA/USEEIO), and [available here (115MB download)](https://files.brightway.dev/visualization_example_data.zip). 
