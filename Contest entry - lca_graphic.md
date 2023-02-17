@@ -34,7 +34,9 @@ The [dashboards.py](https://github.com/teolvs/lca_graphic/blob/main/dashboards.p
 All these methods are generated all at once in the method ```lca_graphic```
 
 ### Visualizations
-Please specify here the location of the example visualizations produced with your code.
+1. ```compare``` https://github.com/teolvs/lca_graphic/blob/main/outputs/compare.gif
+2. ```impact_transfer``` https://github.com/teolvs/lca_graphic/blob/main/outputs/impact_transfer.gif
+3. ```hotspots``` https://github.com/teolvs/lca_graphic/blob/main/outputs/hotspots.gif.
 
 
 ### Presentation video
