@@ -40,7 +40,8 @@ All these methods are generated all at once in the method ```lca_graphic```
 
 
 ### Presentation video
-Please put here the links to a video of maximum 4 minutes where you present your visualization.
+LCAgraphic, easy to understand graphics for everyday LCA practitioners life
+https://youtu.be/nhVetFpbGFY
 
 
 ## License
