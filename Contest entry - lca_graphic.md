@@ -40,7 +40,6 @@ All these methods are generated all at once in the method ```lca_graphic```
 
 
 ### Presentation video
-LCAgraphic, easy to understand graphics for everyday LCA practitioners life
 https://youtu.be/nhVetFpbGFY
 
 
